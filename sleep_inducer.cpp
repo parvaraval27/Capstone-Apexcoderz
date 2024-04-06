@@ -2,10 +2,12 @@
 #include <windows.h>
 using namespace std;
 
+string Filename;
+
 class Inmates
 {
     string name, ID;
-    int dome;
+    int dorm;
 
 public:
     Inmates() {}
@@ -17,9 +19,9 @@ public:
     {
         this->ID = ID;
     }
-    void setdome(int dome)
+    void setdorm(int dorm)
     {
-        this->dome = dome;
+        this->dorm = dorm;
     }
     string getname()
     {
@@ -29,95 +31,132 @@ public:
     {
         return ID;
     }
-    int getdome()
+    int getdorm()
     {
-        return dome;
+        return dorm;
     }
 };
-
 void insert(Inmates i)
 {
-    bool close = false;
-    while (!close)
+    bool close=false;
+    bool filex=true;
+    while(!close)
     {
         system("cls");
-        cout << "\n\n\t\t\t**INSERT\n\n";
-        string name, ID;
-        int dome;
-
-        cout << "\tEnter Name : ";
-        cin >> name;
-        i.setname(name);
-        cout << "\n\n\tEnter ID : ";
-        cin >> ID;
+        string name,ID;
+        int dorm;
+        if (filex)
+        {
+            cout<<"\n\n\t\t\t******INSERT********\n\n";
+            cout<<"Enter input file name : ";
+            cin>>Filename;
+            system("cls");
+            filex=false;
+        }
+        cout<<"\t****INSERT****\n\n";
+        cout<<"\n\n\tEnter ID : ";
+        cin>>ID;
         i.setID(ID);
-        cout << "\n\n\tEnter Dome no. : ";
-        cin >> dome;
-        i.setdome(dome);
+        if(ifexist(ID)){
+            cout<<"\n\n\tInmate Already Exist....";
+            Sleep(2000);
+        }
+        else{
+        cout <<"\n\n\t\tEnter Name : ";
+        getline(cin,name);
+        i.setname(name);
 
-        ofstream out("inmates.txt", ios::app);
+        ofstream out(Filename,ios::app);
 
         if (!out)
         {
-            cout << "\tError: File Can't Open!" << endl;
+            cout<<"\tError: File Can't Open!"<<endl;
+            Sleep(2000);
             return;
         }
         else
         {
-            out << i.getdome() << " : " << i.getID() << " : " << i.getname() << " : ";
+            int sumH=0,sumM=0;
+            int H[10],M[10];
+            cout<<"Enter 10 days sleep time(HH:MM): "<<endl;
+            string day[7] = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+            for(int i=0; i<7;i++)
+            {
 
-            switch (dome)
-            {
-            case 1:
-            {
-                out << "10 : 00" << endl
-                    << endl;
-                break;
+                cout<<day[i]<<"'s Sleep time - ";
+                cin>>H[i];
+                getchar();
+                cin >> M[i];
+                sumH+=H[i];
+                sumM+=M[i];
             }
-            case 2:
+            int AvgH=sumH/7;
+            int AvgM=sumM/7;
+
+            if (AvgH==9 and AvgM>=0 and AvgM<= 30)
             {
-                out << "10 : 30" << endl
-                    << endl;
-                break;
+                out<<"1 : ";
             }
-            case 3:
+            else if (AvgH==9 and AvgM>30 and AvgM<=59)
             {
-                out << "11 : 00" << endl
-                    << endl;
+                out<<"2 : ";
             }
+            else if (AvgH==10 and AvgM>=0 and AvgM<= 30)
+            {
+                out<<"3 : ";
             }
+            else if (AvgH==10 and AvgM>30 and AvgM<=59)
+            {
+                out<<"4 : ";
+            }
+            else if (AvgH==11 and AvgM>=0 and AvgM<=30)
+            {
+                out<<"5 : ";
+            }
+            else if (AvgH==11 and AvgM>30 and AvgM<=59)
+            {
+                out << "6 : ";
+            }
+
+            out<<i.getID()<<" : "<<i.getname()<<" : ";
+            for (int i=0; i<7;i++)
+            {
+                out<<H[i]<<":"<< M[i];
+                if (i!=6)
+                    out<<" : ";
+            }
+            out<<endl
+                <<endl;
         }
         out.close();
         system("cls");
-        cout << "Loading";
-        for (int i = 0; i < 5; i++)
+        cout<<"Loading";
+        for (int i=0;i<5;i++)
         {
-            cout << ".";
+            cout<<".";
             Sleep(800);
         }
         system("cls");
-        cout << "\n\n\tData Added Successfully";
+        cout<<"\n\n\tData Added Successfully";
         Sleep(2000);
-
+        }
         system("cls");
         int choice;
-        cout << "\t1.Add more data";
-        cout << "\n\n\t2.close.";
-        cout << "\n\n\tEnter choise: ";
-        cin >> choice;
-        if (choice == 2)
+        cout<<"\t1. Add more data in same file";
+        cout<<"\n\n\t2. Add more data in other file";
+        cout<<"\n\n\t3. Close";
+        cout<<"\n\n\tEnter choice: ";
+        cin>>choice;
+        if(choice==2)
         {
-            close = true;
+            filex=true;
+        }
+        if(choice==3)
+        {
+            close=true;
         }
     }
 }
-
-void search()
-
-void show()
-
-
-
 int main()
 {
     Inmates i;
@@ -126,14 +165,19 @@ int main()
     {
         system("cls");
         int choice;
-        cout << "\n\n\t\t\t*** SLEEP INDUCER ***";
+        cout << "\n\n\t\t\t\t\t*********";
+        cout << "\n\t\t\t\t\t|     SLEEP INDUCER     |";
+        cout << "\n\t\t\t\t\t*********";
         cout << "\n\n 1.Enter New Inmates";
         cout << "\n\n 2.Show Inmates data";
         cout << "\n\n 3.Search Inmates";
-        cout << "\n\n 4.Exit";
+        cout << "\n\n 4.Delete Inmates";
+        cout << "\n\n 5.Set Auto Dorm";
+        cout << "\n\n 6.Start Inducer";
+        cout << "\n\n 7.Exit";
         cout << "\n\n Enter Choice: ";
         cin >> choice;
-
+        cin.ignore();
         switch (choice)
         {
         case 1:
@@ -143,15 +187,35 @@ int main()
         }
         case 2:
         {
+            system("cls");
+            cout << "Enter input file name : ";
+            cin >> Filename;
             show();
             break;
         }
         case 3:
         {
+            system("cls");
+            cout << "Enter input file name : ";
+            cin >> Filename;
             search();
             break;
         }
         case 4:
+        {
+            delete_inmate();
+            break;
+        }
+        case 5:
+        {
+            set_dorm();
+            break;
+        }
+        case 6:
+        {
+            break;
+        }
+        case 7:
         {
             exit = true;
             break;
@@ -159,6 +223,7 @@ int main()
         default:
         {
             cout << "\n\nEnter valid choice";
+            Sleep(2000);
             break;
         }
         }
