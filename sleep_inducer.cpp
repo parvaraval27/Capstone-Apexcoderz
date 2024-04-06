@@ -157,6 +157,73 @@ void insert(Inmates i)
         }
     }
 }
+
+void search()
+{
+    system("cls");
+    cout<<"\n\n\t\t\t*SEARCH*\n\n";
+    string ID;
+    cout<<"\tEnter Inmate's ID : ";
+    cin>>ID;
+    ifstream in(Filename);
+
+    if (!in)
+    {
+        cout<<"\tError 404: File can't Open!" << endl;
+        Sleep(2000);
+        return;
+    }
+    else
+    {
+        string line;
+        bool found=false;
+        while (getline(in,line))
+        {
+            int ff=line.find(ID);
+            if (ff!=string::npos)
+            {
+                system("cls");
+                cout<<"\tInmate Found";
+                cout<<"\n\nWait, the details are loading...";
+                Sleep(3000);
+                system("cls");
+                stringstream ss(line);
+                string word;
+                getline(ss,word,':');
+                cout<<"\n\n\tDorm : "<<word;
+                getline(ss,word, ':');
+                cout <<"\n\n\tId : "<<word;
+                getline(ss, word, ':');
+                cout<<"\n\n\tName : "<<word;
+                int sumH=0,sumM=0;
+                for (int i=0;i<14;i++)
+                {
+                    getline(ss,word,':');
+                    if (i%2==0)
+                    {
+                        sumH+=stoi(word);
+                    }
+                    else
+                    {
+                        sumM+=stoi(word);
+                    }
+                }
+                cout<<"\n\n\tAvg Sleep_time :- " <<(int)(sumH/7)<<":"<<(int)(sumM/7);
+                cout<<"\n\n\n\nPress Enter to continue....";
+                getchar();
+                getchar();
+                in.close();
+                return;
+            }
+        }
+        in.close();
+        system("cls");
+        cout<<"\tError 404 : Inmate Not Found!";
+        Sleep(2000);
+        return;
+    }
+}
+
 int main()
 {
     Inmates i;
