@@ -77,7 +77,7 @@ void insert(Inmates i)
         else
         {
             int sumH=0,sumM=0;
-            int H[10],M[10];
+            int H[7],M[7];
             cout<<"Enter 10 days sleep time(HH:MM): "<<endl;
             string day[7] = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
             for(int i=0; i<7;i++)
