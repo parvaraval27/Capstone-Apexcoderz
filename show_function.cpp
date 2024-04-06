@@ -4,44 +4,58 @@ void show()
     system("cls");
     if (!in)
     {
-        cout<<"Error 404 : File not found!"<<endl;
+        cout << RED << "Error 404 : File not found!" << RESET << endl;
         Sleep(2000);
         return;
     }
     else
     {
+        time_t now = time(0);
+        tm *ltm = localtime(&now);
         string line;
-        while (getline(in,line))
+        cout<<setw(5)<<"<"<<"Dorm"<<">";
+        cout<<setw(8)<<"<"<<"ID"<<">";
+        cout<<setw(8)<<"<"<<"Sleep_time"<<">";
+        cout<<setw(8)<<"<"<<"Name"<<">";
+        cout<<endl<<endl;
+        while (getline(in, line))
         {
             stringstream ss(line);
             string word;
-            getline(ss, word,':');
-            cout<<"\n\n\tDorm : "<<word;
-            getline(ss, word,':');
-            cout<<"\n\n\tId : "<<word;
-            getline(ss, word,':');
-            cout<<"\n\n\tName : "<<word;
-            int sumH=0,sumM=0;
-            for (int i=0;i<14;i++)
+            getline(ss, word, ':');
+            cout << setw(5) << "<" <<stoi(word) <<">";
+            getline(ss, word, ':');
+            cout << setw(8)<<"<" << word<<">";
+            getline(ss, word, ':');
+            string name=word;
+            int H = 0, M = 0;
+            int ind = ltm->tm_wday+1;
+            if(ind==1)
+                ind+=6;
+            for (int i = 0; i < 2 * ind; i++)
+        {
+            getline(ss, word, ':');
+            if (i % 2 == 0)
             {
-                getline(ss,word,':');
-                if (i%2==0)
-                {
-                    sumH+=stoi(word);
-                }
-                else
-                {
-                    sumM+=stoi(word);
-                }
+                H = stoi(word);
             }
+            else
+            {
+                M = stoi(word);
+            }
+        }
+            if(M<=9)
+                cout << setw(8) <<"<"<<setw(2)<< H << ":" <<"0" << M <<setw(2)<< ">";
+            else
+                cout << setw(8) <<"<"<<setw(2)<< H << ":" << M <<setw(2)<< ">";
 
-            cout<<"\n\n\tAvg Sleep_time :- "<<(int)(sumH/7)<<":"<<(int)(sumM/7);
-
-            cout<<"\n"<<endl;
-            getline(in,line);
+            cout << setw(15) <<"<" << name << ">";
+            cout << "\n";
+            getline(in, line);
+            
         }
 
-        cout<<"\n\n\nPress Enter to continue....";
+        cout << "\n\n\nPress Enter to continue....";
         getchar();
         getchar();
     }
