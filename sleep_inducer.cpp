@@ -8,8 +8,7 @@
 #include <conio.h>        // _kbhit() function
 #include <windows.h>      // Sleep() function
 #include <mmsystem.h>     // Multimedia System Library(Song)
-#include <iomanip>        // Alignment of output
-
+#include <iomanip>         // Alignment of output      
 using namespace std;
 
 //winmm.lib link with program (use for play song)
@@ -63,6 +62,42 @@ public:
     }
 };//End of inmates class
 
+void intro(){
+    system("cls");
+    cout <<MAGENTA<< R"(
+
+                        ______    _         _______   _______   ______
+                       / _____|  | |       |   ____| |   ____| |   _  \
+                      | |____    | |       |  |____  |  |____  |  |_|  |
+                       \_____ \  | |       |   ____| |   ____| |  ____/    
+                       _____) |  | |_____  |  |____  |  |____  | | 
+                      |______/   |_______| |_______| |_______| |_| 
+
+
+                                           _   __      _   _______      _      _   _______   _______    ______
+                                          | | |   \   | | |  ____  \   | |    | | |   ____| |   ____|  |   _  \
+                                          | | | |\ \  | | | |    \  \  | |    | | |  |      |  |____   |  |_|  |
+                                          | | | | \ \ | | | |     |  | | |    | | |  |      |   ____|  |  _  _/
+                                          | | | |  \ \| | | |____/  /  |  \__/  | |  |____  |  |____   | | \ \
+                                          |_| |_|   \___| |________/    \______/  |_______| |_______|  |_|  \_\
+                                                
+                                                      
+    )"<<RESET<<endl<<endl;
+    cout<<"Instructor Name : Sourish Dasgupta"<<endl<<endl;
+    cout<<GREEN<<"Our Group Member List"<<RESET<<endl;
+    cout<<"Om Santoki   2023011019"<<endl;
+    cout<<"Diyen Pambhar    202301113"<<endl;
+    cout<<"Parva Raval  2023011055"<<endl;
+    cout<<"Daksh Ubhadia    2023011014"<<endl;
+    cout<<"\n\nPress enter to continue........";
+    getchar();
+    system("cls");
+    cout<<RED<<"\n\t\t\t\t\tCAUTION"<<endl;
+    cout<<"\n\n\t\t\tStart Inducer function before 9 pm\n\t\t\tDo not insert or delete data between 9pm to 11pm. "<<RESET;
+    cout<<"\n\nPress Enter to continue....";
+    getchar();
+}
+
 //Check inmate already exist or not
 bool ifexist(string ID)
 {
@@ -95,20 +130,20 @@ void insert(Inmates i)
         int dorm;
         if (filex)
         {
-            cout << "\n\n\t\t\t******INSERT********\n\n";
+            cout << "\n\n\t\t\t*****************INSERT***********************\n\n";
             cout << "Enter input file name : ";
             cin >> Filename;
             system("cls");
             filex = false;
         }
-        cout << "\t******INSERT********\n\n";
+        cout << "\t*****************INSERT***********************\n\n";
         cout << "\n\n\t\tEnter ID : ";
         cin >> ID;
         i.setID(ID);
         getchar();
         if (ifexist(ID))
         {
-            cout << RED << "\n\n\t\tInmate Already Exist...." << RESET;
+            cout << RED << "\n\n\t\tInmate Already Exists...." << RESET;
             Sleep(2000);
         }
         else
@@ -130,7 +165,7 @@ void insert(Inmates i)
             {
                 int sumH = 0, sumM = 0;
                 int H[7], M[7];
-                cout << "Enter 7 days sleep time(HH:MM): " << endl;
+                cout << "Enter 10 days sleep time(HH:MM): " << endl;
                 string day[7] = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
                 for (int i = 0; i < 7; i++)
                 {
@@ -220,7 +255,7 @@ void search(Inmates i)
     time_t now = time(0);   
     tm *ltm = localtime(&now);
 
-    cout << "\n\n\t\t\t**********SEARCH************\n\n";
+    cout << "\n\n\t\t\t***************************SEARCH*********************************\n\n";
     string ID;
     cout << "\tEnter Inmate's ID : ";
     cin >> ID;
@@ -438,7 +473,7 @@ void delete_inmate()
         {
             system("cls");
             cout << RED << "\n\nInmate Not Found,Enter valid Inmate ID" << RESET;
-            cout << "\n\n\t1.Want to delete.";
+            cout << "\n\n\t1.Try again.";
             cout << "\n\n\t2.Back to main menu.";
             int choice;
             cin >> choice;
@@ -548,7 +583,7 @@ void inducer()
 
     cout << "Enter input file name : ";
     cin >> Filename;
-    cout << "\n\nPress Enter any time for exit Inducer ...";
+    cout << "\n\nPress Enter anytime to exit Inducer ...";
     Sleep(2000);
     system("cls");
 
@@ -558,10 +593,12 @@ void inducer()
         //For output current time
         time_t now = time(0);
         tm *ltm = localtime(&now);
-
+        
         int hour = ltm->tm_hour;
         int minute = ltm->tm_min;
         int second = ltm->tm_sec;
+
+        bool exist=true;
 
         //Start inducing on their sleep time
         if (hour == 21 and minute >= 0 and minute <= 30)
@@ -589,7 +626,8 @@ void inducer()
                     getline(ss, word, ':');
                     int ff = word.find("1");
                     if (ff != string::npos)
-                    {
+                    {   
+
                         getline(ss, word, ':');
                         cout << setw(2) << "<" << stoi(word) << ">";
                     }
@@ -597,7 +635,7 @@ void inducer()
                 }
                 cout << endl;
                 //play music
-                cout << "playig music \n";
+                cout << "playing music \n";
                 PlaySound(TEXT("1.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
             }
@@ -635,7 +673,7 @@ void inducer()
                 }
                 cout << endl;
                 //play music
-                cout << "playig music \n";
+                cout << "playing music \n";
                 PlaySound(TEXT("2.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
             }
@@ -673,7 +711,7 @@ void inducer()
                 }
                 cout << endl;
                 //play music
-                cout << "playig music \n";
+                cout << "playing music \n";
                 PlaySound(TEXT("3.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
             }
@@ -711,7 +749,7 @@ void inducer()
                 }
                 cout << endl;
                 //play music
-                cout << "playig music \n";
+                cout << "playing music \n";
                 PlaySound(TEXT("4.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
             }
@@ -749,7 +787,7 @@ void inducer()
                 }
                 cout << endl;
                 //play music
-                cout << "playig music \n";
+                cout << "playing music \n";
                 PlaySound(TEXT("5.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
             }
@@ -786,7 +824,7 @@ void inducer()
                 }
                 cout << endl;
                 //play music
-                cout << "playig music \n";
+                cout << "playing music \n";
                 PlaySound(TEXT("6.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
             }
@@ -805,15 +843,17 @@ int main()
     Inmates i;
     //For exit from inducer code()
     bool exit = false;
+
+    intro();
     while (!exit)
     {
         system("cls");
         int choice;            
-        cout << "\n\n\t\t\t\t\t_________"<<endl;
+        cout << "\n\n\t\t\t\t\t_________________________"<<endl;
         cout << "\n\t\t\t\t\t|";
         cout << MAGENTA << "     SLEEP INDUCER     " << RESET;
         cout << "|";
-        cout << "\n\t\t\t\t\t_________";
+        cout << "\n\t\t\t\t\t_________________________";
         cout << "\n\n 1.Enter New Inmates";
         cout << "\n\n 2.Show Inmates data";
         cout << "\n\n 3.Search Inmates";
