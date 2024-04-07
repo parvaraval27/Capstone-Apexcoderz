@@ -1,43 +1,139 @@
-# Capstone-Apexcoderz
-# Sleep Inducer System
-
-## Overview
-This program simulates a sleep inducer system for managing inmates' sleep data and inducing sleep through sound. It allows users to enter new inmates, search for inmates, display inmate data, delete inmates, set dorm numbers based on sleep time, and start the sleep inducer.
+# Inmates Management System
 
 ## Libraries Used
-- `bits/stdc++.h`: Standard C++ libraries
-- `conio.h`: For `_kbhit()` function
-- `ctime`: For time manipulation functions
-- `windows.h`: For `system()` function and `Sleep()` function
-- `mmsystem.h`: For playing sound (multimedia system)
+- iostream
+- fstream
+- sstream
+- string
+- vector
+- unordered_map
+- ctime
+- conio.h
+- windows.h
+- mmsystem.h
+- iomanip
 
-## Class `Inmates`
-This class represents each inmate and contains the following attributes and methods:
+## Global Variables
+- `filename`: string
 
-### Attributes
-- `name`: Name of the inmate
-- `ID`: ID of the inmate
-- `dorm`: Dormitory number of the inmate
+## Class Definition: `Inmates`
+- **Private Members**:
+    - `name` (string)
+    - `ID` (string)
+    - `dorm` (int)
+- **Public Methods**:
+    - Constructor: `Inmates()`
+    - Setter Methods: `setname(string)`, `setID(string)`, `setdorm(int)`
+    - Getter Methods: `getname()`, `getID()`, `getdorm()`
 
-### Methods
-- `setname(string name)`: Set the name attribute
-- `setID(string ID)`: Set the ID attribute
-- `setdorm(int dorm)`: Set the dorm attribute
-- `getname()`: Return the name attribute
-- `getID()`: Return the ID attribute
-- `getdorm()`: Return the dorm attribute
+## Function Definitions
 
-## Functions
-1. `ifexist(ID)`: Check if the inmate ID exists in the file specified by `Filename`.
-2. `insert(i)`: Insert new inmate data into the file.
-3. `search()`: Search for an inmate by ID and display their details.
-4. `show()`: Display all inmates' data in a tabular format.
-5. `delete_inmate()`: Delete an inmate from the file.
-6. `set_dorm()`: Set the dormitory number based on the sleep time for a specified day.
-7. `inducer()`: Start the sleep inducer, which plays music based on the current time and dormitory.
+### `ifexist(ID: string) -> bool`
+- Opens the file specified by `Filename` in read mode.
+- Iterates through each line in the file:
+    - Checks if the `ID` exists in the line.
+    - If found, returns true.
+- If not found, returns false.
 
-## Main Function
-The `main()` function serves as the entry point of the program and provides a menu-driven interface for interacting with the sleep inducer system.
+### `insert(Inmates i)`
+- Initializes variables: `close = false`, `filex = true`
+- While not `close`:
+    - Clears screen
+    - Prompts user to enter input file name if `filex` is true
+    - Prompts user to enter inmate's ID
+    - If the ID already exists:
+        - Prints error message and waits for 2 seconds
+    - Else:
+        - Prompts user to enter inmate's name
+        - Opens file specified by `Filename` in append mode
+        - If file cannot be opened:
+            - Prints error message and returns
+        - Else:
+            - Prompts user to enter sleep time for 10 days
+            - Calculates average sleep time
+            - Determines dorm number based on average sleep time
+            - Writes inmate's data to the file
+            - Closes the file
+            - Prints success message
+    - Prompts user for further actions (add more data, change file, close)
 
-## Starting the Program
-To start the program, call the `main()` function.
+### `search(Inmates i)`
+- Clears screen
+- Gets current time
+- Prompts user to enter inmate's ID
+- Opens file specified by `Filename` in read mode
+- If file cannot be opened:
+    - Prints error message and returns
+- Else:
+    - Initializes an unordered_map to store inmate data
+    - Iterates through each line in the file:
+        - Parses the line and extracts dorm, ID, name, and sleep time data
+        - Stores inmate's data in the unordered_map
+    - Closes the file
+    - Searches for the given ID in the unordered_map
+    - If ID is found:
+        - Prints inmate's details and waits for Enter key press
+    - Else:
+        - Prints error message
+
+### `show()`
+- Opens file specified by `Filename` in read mode
+- If file cannot be opened:
+    - Prints error message and returns
+- Else:
+    - Gets current day
+    - Prints header for inmate details
+    - Iterates through each line in the file:
+        - Parses the line and extracts dorm, ID, name, and sleep time data
+        - Prints inmate's details
+    - Waits for Enter key press
+
+### `delete_inmate()`
+- Initializes `close = false`
+- While not `close`:
+    - Clears screen
+    - Prompts user to enter input file name
+    - Prompts user to enter inmate's ID to delete
+    - Opens file specified by `Filename` in read mode
+    - Initializes `found = false`
+    - Initializes a vector to store lines of the file
+    - Iterates through each line in the file:
+        - Checks if the inmate's ID exists in the line
+        - If found, marks found as true, else adds the line to the vector
+    - Closes the file
+    - Opens file specified by `Filename` in write mode
+    - Writes lines from the vector to the file
+    - Closes the file
+    - If inmate is found:
+        - Prints success message
+    - Else:
+        - Prints error message and prompts user for further actions
+
+### `set_dorm()`
+- Clears screen
+- Prompts user to enter input file name
+- Prompts user to enter day
+- Opens file specified by `Filename` in read mode
+- Initializes an array with day names
+- Resets dorm numbers based on day and sleep time
+- Closes the file
+- Prints wait message and waits for 3 seconds
+
+### `inducer()`
+- Prompts user to enter input file name
+- Prints message to exit
+- While no key is pressed:
+    - Gets current time
+    - Determines dorm to induce sleep based on time
+    - Prints dorm number and Earpod IDs of inmates in that dorm
+    - Plays corresponding music
+    - Prints current time and refresh every second
+
+### `main()`
+- Initializes object of `Inmates` class
+- Initializes `exit = false`
+- While not `exit`:
+    - Clears screen
+    - Prints menu options
+    - Prompts user for choice
+    - Based on choice, call respective functions or exit program
