@@ -2,11 +2,11 @@
 #include <conio.h>
 #include <ctime>
 #include <windows.h>
-#include<mmsystem.h>
+#include <mmsystem.h>
 
 using namespace std;
 
-#pragma comment(lib,"winmm.lib")
+#pragma comment(lib, "winmm.lib")
 
 #define RESET "\033[0m"
 #define RED "\033[31m"
@@ -51,7 +51,6 @@ public:
         return dorm;
     }
 };
-
 
 void insert(Inmates i)
 {
@@ -98,7 +97,7 @@ void insert(Inmates i)
             {
                 int sumH = 0, sumM = 0;
                 int H[7], M[7];
-                cout << "Enter 7 days sleep time(HH:MM): " << endl;
+                cout << "Enter 10 days sleep time(HH:MM): " << endl;
                 string day[7] = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
                 for (int i = 0; i < 7; i++)
                 {
@@ -158,7 +157,7 @@ void insert(Inmates i)
             }
             system("cls");
             cout << GREEN << "\n\n\tData Added Successfully" << RESET;
-           Sleep(2000);
+            Sleep(2000);
         }
         system("cls");
         int choice;
@@ -178,7 +177,7 @@ void insert(Inmates i)
     }
 }
 
-void search()
+void search(Inmates i)
 {
     system("cls");
     time_t now = time(0);
@@ -199,57 +198,65 @@ void search()
     else
     {
         string line;
-        
-        bool found = false;
+        unordered_map<string, pair<pair<string, string>, pair<string,string>>> inmates;
+
         while (getline(in, line))
         {
-            int ff = line.find(ID);
-            if (ff != string ::npos)
+            stringstream ss(line);
+            string word;
+            getline(ss, word, ':');
+            string dorm=word;
+            getline(ss, word, ':');
+            i.setID(to_string(stoi(word)));
+            getline(ss, word, ':');
+            i.setname(word);
+            int ind = ltm->tm_wday + 1;
+            if (ind == 1)
+                ind += 6;
+            string H, M;
+            for (int j = 0; j < 2 * ind; j++)
             {
-                system("cls");
-                cout << GREEN << "\tInmate Found" << RESET;
-                cout << "\n\nWait, the details are loading...";
-                Sleep(3000);
-                system("cls");
-                stringstream ss(line);
-                string word;
                 getline(ss, word, ':');
-                cout << "\n\n\tDorm : " << word;
-                getline(ss, word, ':');
-                cout << "\n\n\tId : " << word;
-                getline(ss, word, ':');
-                cout << "\n\n\tName : " << word;
-                int ind = ltm->tm_wday+1;
-                if(ind==1)
-                    ind+=6;
-                int H,M;
-                for (int i = 0; i < 2 * ind; i++)
-                  {
-                      getline(ss, word, ':');
-                      if (i % 2 == 0)
-                      {
-                          H = stoi(word);
-                      }
-                      else
-                      {
-                          M = stoi(word);
-                      }
-                  }
-                cout << "\n\n\tSleep_time :- " << H << ":" << M;
-                cout << "\n\n\n\nPress Enter to continue....";
-                getchar();
-                getchar();
-                in.close();
-                return;
+                if (j % 2 == 0)
+                {
+                    H = word;
+                }
+                else
+                {
+                    M = word;
+                }
             }
+            inmates[i.getID()] = make_pair(make_pair(i.getname(), dorm), make_pair(H, M));
+            getline(in,line);
         }
         in.close();
-        system("cls");
-        cout << RED << "\tError 404 : Inmate Not Found!" << RESET;
-        Sleep(2000);
-        return;
+
+        auto it = inmates.find(ID);
+
+        if (it != inmates.end())
+        {
+            system("cls");
+            cout << GREEN << "\n\tInmate Found....." << RESET << endl;
+            cout << "\n\nInmate's Details are Loading, Please wait.....";
+            Sleep(3000);
+            system("cls");
+            cout << "\n\n\tDorm : " << (((it->second).first).second);
+            cout << "\n\tID : " << it->first;
+            cout << "\n\tName : " << ((it->second).first).first;
+            cout << "\n\tSleep_time - " << ((it->second).second).first << ":" << ((it->second).second).second;
+            getchar();
+            getchar();
+            cout << "\n\n\tPress Enter to continue.....";
+        }
+        else
+        {
+            system("cls");
+            cout << RED << "\n\n\tError 404 : Inmate Not Found";
+            Sleep(2000);
+        }
     }
 }
+
 
 void show()
 {
@@ -266,46 +273,55 @@ void show()
         time_t now = time(0);
         tm *ltm = localtime(&now);
         string line;
-        cout<<setw(5)<<"<"<<"Dorm"<<">";
-        cout<<setw(8)<<"<"<<"ID"<<">";
-        cout<<setw(8)<<"<"<<"Sleep_time"<<">";
-        cout<<setw(8)<<"<"<<"Name"<<">";
-        cout<<endl<<endl;
+        cout << setw(5) << "<"
+             << "Dorm"
+             << ">";
+        cout << setw(8) << "<"
+             << "ID"
+             << ">";
+        cout << setw(8) << "<"
+             << "Sleep_time"
+             << ">";
+        cout << setw(12) << "<"
+             << "Name"
+             << ">";
+        cout << endl
+             << endl;
         while (getline(in, line))
         {
             stringstream ss(line);
             string word;
             getline(ss, word, ':');
-            cout << setw(5) << "<" <<stoi(word) <<">";
+            cout << setw(5) << "<" << stoi(word) << ">";
             getline(ss, word, ':');
-            cout << setw(8)<<"<" << word<<">";
+            cout << setw(8) << "<" << word << ">";
             getline(ss, word, ':');
-            string name=word;
+            string name = word;
             int H = 0, M = 0;
-            int ind = ltm->tm_wday+1;
-            if(ind==1)
-                ind+=6;
+            int ind = ltm->tm_wday + 1;
+            if (ind == 1)
+                ind += 6;
             for (int i = 0; i < 2 * ind; i++)
-        {
-            getline(ss, word, ':');
-            if (i % 2 == 0)
             {
-                H = stoi(word);
+                getline(ss, word, ':');
+                if (i % 2 == 0)
+                {
+                    H = stoi(word);
+                }
+                else
+                {
+                    M = stoi(word);
+                }
             }
+            if (M <= 9)
+                cout << setw(8) << "<" << setw(2) << H << ":"
+                     << "0" << M << setw(2) << ">";
             else
-            {
-                M = stoi(word);
-            }
-        }
-            if(M<=9)
-                cout << setw(8) <<"<"<<setw(2)<< H << ":" <<"0" << M <<setw(2)<< ">";
-            else
-                cout << setw(8) <<"<"<<setw(2)<< H << ":" << M <<setw(2)<< ">";
+                cout << setw(8) << "<" << setw(2) << H << ":" << M << setw(2) << ">";
 
-            cout << setw(15) <<"<" << name << ">";
+            cout << setw(15) << "<" << name << ">";
             cout << "\n";
             getline(in, line);
-            
         }
 
         cout << "\n\n\nPress Enter to continue....";
@@ -489,10 +505,11 @@ void inducer()
         int second = ltm->tm_sec;
         int dormNo;
         if (hour == 21 and minute >= 0 and minute <= 30)
-        {   
+        {
             system("cls");
-            cout<<GREEN<<"\tStarting inducer in dorm 1"<<RESET<<endl<<endl;
-            cout<<"Earpod ID of dorm 1 members"<<endl;
+            cout << GREEN << "\tStarting inducer in dorm 1" << RESET << endl
+                 << endl;
+            cout << "Earpod ID of dorm 1 members" << endl;
             dormNo = 1;
             ifstream in(Filename);
             if (!in)
@@ -509,25 +526,27 @@ void inducer()
                     stringstream ss(line);
                     string word;
                     getline(ss, word, ':');
-                    int ff=word.find("1");
-                    if(ff != string::npos){
-                    getline(ss, word, ':');
-                    cout <<setw(2) << "<"<<stoi(word)<<">";
+                    int ff = word.find("1");
+                    if (ff != string::npos)
+                    {
+                        getline(ss, word, ':');
+                        cout << setw(2) << "<" << stoi(word) << ">";
                     }
-                    getline(in,line);
+                    getline(in, line);
                 }
-                cout<<endl;
-                cout<<"playig music \n";
-                PlaySound(TEXT("abc.wav"),NULL,SND_FILENAME | SND_SYNC);
-                cout<<"over";
+                cout << endl;
+                cout << "playig music \n";
+                PlaySound(TEXT("abc.wav"), NULL, SND_FILENAME | SND_SYNC);
+                cout << "over";
             }
         }
         else if (hour == 21 and minute > 30 and minute <= 59)
         {
-            
+
             system("cls");
-            cout<<GREEN<<"\tStarting inducer in dorm 2"<<RESET<<endl<<endl;
-            cout<<"Earpod ID of dorm 2 members"<<endl;
+            cout << GREEN << "\tStarting inducer in dorm 2" << RESET << endl
+                 << endl;
+            cout << "Earpod ID of dorm 2 members" << endl;
             ifstream in(Filename);
             if (!in)
             {
@@ -543,25 +562,27 @@ void inducer()
                     stringstream ss(line);
                     string word;
                     getline(ss, word, ':');
-                    int ff=word.find("2");
-                    if(ff != string::npos){
-                    getline(ss, word, ':');
-                    cout <<setw(2) << "<"<<stoi(word)<<">";
+                    int ff = word.find("2");
+                    if (ff != string::npos)
+                    {
+                        getline(ss, word, ':');
+                        cout << setw(2) << "<" << stoi(word) << ">";
                     }
-                    getline(in,line);
+                    getline(in, line);
                 }
-                cout<<endl;
-                cout<<"playig music \n";
-                PlaySound(TEXT("abc.wav"),NULL,SND_FILENAME | SND_SYNC);
-                cout<<"over";
+                cout << endl;
+                cout << "playig music \n";
+                PlaySound(TEXT("abc.wav"), NULL, SND_FILENAME | SND_SYNC);
+                cout << "over";
             }
         }
         else if (hour == 22 and minute >= 0 and minute <= 30)
         {
-            
+
             system("cls");
-            cout<<GREEN<<"\tStarting inducer in dorm 3"<<RESET<<endl<<endl;
-            cout<<"Earpod ID of dorm 3 members"<<endl;
+            cout << GREEN << "\tStarting inducer in dorm 3" << RESET << endl
+                 << endl;
+            cout << "Earpod ID of dorm 3 members" << endl;
             ifstream in(Filename);
             if (!in)
             {
@@ -577,25 +598,27 @@ void inducer()
                     stringstream ss(line);
                     string word;
                     getline(ss, word, ':');
-                    int ff=word.find("3");
-                    if(ff != string::npos){
-                    getline(ss, word, ':');
-                    cout <<setw(2) << "<"<<stoi(word)<<">";
+                    int ff = word.find("3");
+                    if (ff != string::npos)
+                    {
+                        getline(ss, word, ':');
+                        cout << setw(2) << "<" << stoi(word) << ">";
                     }
-                    getline(in,line);
+                    getline(in, line);
                 }
-                cout<<endl;
-                cout<<"playig music \n";
-                PlaySound(TEXT("abc.wav"),NULL,SND_FILENAME | SND_SYNC);
-                cout<<"over";
+                cout << endl;
+                cout << "playig music \n";
+                PlaySound(TEXT("abc.wav"), NULL, SND_FILENAME | SND_SYNC);
+                cout << "over";
             }
         }
         else if (hour == 22 and minute > 30 and minute <= 59)
         {
-            
+
             system("cls");
-            cout<<GREEN<<"\tStarting inducer in dorm 4"<<RESET<<endl<<endl;
-            cout<<"Earpod ID of dorm 4 members"<<endl;
+            cout << GREEN << "\tStarting inducer in dorm 4" << RESET << endl
+                 << endl;
+            cout << "Earpod ID of dorm 4 members" << endl;
             ifstream in(Filename);
             if (!in)
             {
@@ -611,25 +634,27 @@ void inducer()
                     stringstream ss(line);
                     string word;
                     getline(ss, word, ':');
-                    int ff=word.find("4");
-                    if(ff != string::npos){
-                    getline(ss, word, ':');
-                    cout <<setw(2) << "<"<<stoi(word)<<">";
+                    int ff = word.find("4");
+                    if (ff != string::npos)
+                    {
+                        getline(ss, word, ':');
+                        cout << setw(2) << "<" << stoi(word) << ">";
                     }
-                    getline(in,line);
+                    getline(in, line);
                 }
-                cout<<endl;
-                cout<<"playig music \n";
-                PlaySound(TEXT("abc.wav"),NULL,SND_FILENAME | SND_SYNC);
-                cout<<"over";
+                cout << endl;
+                cout << "playig music \n";
+                PlaySound(TEXT("abc.wav"), NULL, SND_FILENAME | SND_SYNC);
+                cout << "over";
             }
         }
         else if (hour == 23 and minute >= 0 and minute <= 30)
         {
-            
+
             system("cls");
-            cout<<GREEN<<"\tStarting inducer in dorm 5"<<RESET<<endl<<endl;
-            cout<<"Earpod ID of dorm 5 members"<<endl;
+            cout << GREEN << "\tStarting inducer in dorm 5" << RESET << endl
+                 << endl;
+            cout << "Earpod ID of dorm 5 members" << endl;
             ifstream in(Filename);
             if (!in)
             {
@@ -645,25 +670,27 @@ void inducer()
                     stringstream ss(line);
                     string word;
                     getline(ss, word, ':');
-                    int ff=word.find("5");
-                    if(ff != string::npos){
-                    getline(ss, word, ':');
-                    cout <<setw(2) << "<"<<stoi(word)<<">";
+                    int ff = word.find("5");
+                    if (ff != string::npos)
+                    {
+                        getline(ss, word, ':');
+                        cout << setw(2) << "<" << stoi(word) << ">";
                     }
-                    getline(in,line);
+                    getline(in, line);
                 }
-                cout<<endl;
-                cout<<"playig music \n";
-                PlaySound(TEXT("abc.wav"),NULL,SND_FILENAME | SND_SYNC);
-                cout<<"over";
+                cout << endl;
+                cout << "playig music \n";
+                PlaySound(TEXT("abc.wav"), NULL, SND_FILENAME | SND_SYNC);
+                cout << "over";
             }
         }
         else if (hour == 23 and minute > 30 and minute <= 59)
         {
             dormNo = 6;
             system("cls");
-            cout<<GREEN<<"\tStarting inducer in dorm 1"<<RESET<<endl<<endl;
-            cout<<"Earpod ID of dorm 6 members"<<endl;
+            cout << GREEN << "\tStarting inducer in dorm 1" << RESET << endl
+                 << endl;
+            cout << "Earpod ID of dorm 6 members" << endl;
             ifstream in(Filename);
             if (!in)
             {
@@ -676,20 +703,21 @@ void inducer()
                 string line;
                 while (getline(in, line))
                 {
-                    int ff=line.find("6");
-                    if(ff != string::npos){
-                    stringstream ss(line);
-                    string word;
-                    getline(ss, word, ':');
-                    getline(ss, word, ':');
-                    cout << setw(2) << "<"<<stoi(word)<<">";
+                    int ff = line.find("6");
+                    if (ff != string::npos)
+                    {
+                        stringstream ss(line);
+                        string word;
+                        getline(ss, word, ':');
+                        getline(ss, word, ':');
+                        cout << setw(2) << "<" << stoi(word) << ">";
                     }
-                    getline(in,line);
+                    getline(in, line);
                 }
-                cout<<endl;
-                cout<<"playig music \n";
-                PlaySound(TEXT("abc.wav"),NULL,SND_FILENAME | SND_SYNC);
-                cout<<"over";
+                cout << endl;
+                cout << "playig music \n";
+                PlaySound(TEXT("abc.wav"), NULL, SND_FILENAME | SND_SYNC);
+                cout << "over";
             }
         }
 
@@ -705,12 +733,12 @@ int main()
     while (!exit)
     {
         system("cls");
-        int choice;
-        cout << "\n\n\t\t\t\t\t*********";
+        int choice;            
+        cout << "\n\n\t\t\t\t\t_________"<<endl;
         cout << "\n\t\t\t\t\t|";
         cout << MAGENTA << "     SLEEP INDUCER     " << RESET;
         cout << "|";
-        cout << "\n\t\t\t\t\t*********";
+        cout << "\n\t\t\t\t\t_________";
         cout << "\n\n 1.Enter New Inmates";
         cout << "\n\n 2.Show Inmates data";
         cout << "\n\n 3.Search Inmates";
@@ -741,7 +769,8 @@ int main()
             system("cls");
             cout << "Enter input file name : ";
             cin >> Filename;
-            search();
+            cin.ignore();
+            search(i);
             break;
         }
         case 4:
@@ -772,5 +801,5 @@ int main()
             break;
         }
         }
-}
+    }
 }
