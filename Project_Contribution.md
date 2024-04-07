@@ -12,10 +12,10 @@ This Project_Contribution.md documents the collaborative efforts of the team in 
 
 ## Individual Contributions
 
-- **Daksh**: Created the initial README.md file, providing an outline and initial information about the project. Focused on adding comments throughout the code for better understanding and contributed to the search function without using a hashmap.
-- **Om**: Later updated the README.md file with additional details and relevant information about the codebase. Provided the pseudo code, offered insights into algorithmic approaches, and contributed to the delete inmate function and ifexist inmate function.
-- **Diyen**: Suggested the implementation of a hashmap in the search function to improve efficiency and also contributed to the sleep inducer function. Worked on formatting the code, adding color schemes for visualization, and provided explanations for better comprehension.
-- **Parva**: Contributed to the insert function, set dorm function, provided analysis on the time and space complexities of the code, and assisted in explaining the code.
+- **Daksh(202301014)**: Created the initial README.md file, providing an outline and initial information about the project. Focused on adding comments throughout the code for better understanding and contributed to the search function without using a hashmap.
+- **Om(202301019)**: Later updated the README.md file with additional details and relevant information about the codebase. Provided the pseudo code, offered insights into algorithmic approaches, and contributed to the delete inmate function and ifexist inmate function.
+- **Diyen(202301113)**: Suggested the implementation of a hashmap in the search function to improve efficiency and also contributed to the sleep inducer function. Worked on formatting the code, adding color schemes for visualization, and provided explanations for better comprehension.
+- **Parva(202301055)**: Contributed to the insert function, set dorm function, provided analysis on the time and space complexities of the code, and assisted in explaining the code.
   
 ## Conclusion
 
