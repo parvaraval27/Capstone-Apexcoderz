@@ -5,66 +5,74 @@
 #include <vector>         // Vector Library
 #include <unordered_map>  // Unordered Map Library
 #include <ctime>          // Time Library
-#include <conio.h>        // _lbhit() function
+#include <conio.h>        // _kbhit() function
 #include <windows.h>      // Sleep() function
 #include <mmsystem.h>     // Multimedia System Library(Song)
 #include <iomanip>        // Alignment of output
 
 using namespace std;
 
+//winmm.lib link with program (use for play song)
 #pragma comment(lib, "winmm.lib")
 
+//For print output or error in different color
 #define RESET "\033[0m"
 #define RED "\033[31m"
 #define GREEN "\033[32m"
-#define YELLOW "\033[33m"
-#define BLUE "\033[34m"
 #define MAGENTA "\033[35m"
-#define CYAN "\033[36m"
-#define WHITE "\033[37m"
 
-string Filename;
 
-class Inmates
+string Filename;        //store input file name
+
+class Inmates   //store data of inmates
 {
     string name, ID;
     int dorm;
 
 public:
     Inmates() {}
+    //set name
     void setname(string name)
     {
         this->name = name;
     }
+    //set id
     void setID(string ID)
     {
         this->ID = ID;
     }
+    //set dorm
     void setdorm(int dorm)
     {
         this->dorm = dorm;
     }
+    //return name
     string getname()
     {
         return name;
     }
+    //return ID
     string getID()
     {
         return ID;
     }
+    //return Dorm
     int getdorm()
     {
         return dorm;
     }
-};
+};//End of inmates class
 
+//Check inmate already exist or not
 bool ifexist(string ID)
 {
+    //open file in read mode
     ifstream in(Filename);
 
     string line;
     while (getline(in, line))
     {
+        //find() function return special type npos
         int ff = line.find(ID);
         if (ff != string ::npos)
         {
@@ -73,11 +81,12 @@ bool ifexist(string ID)
     }
 
     return false;
-}
+}//End of ifexist() function
 
+//insert data to specific input file
 void insert(Inmates i)
 {
-    bool close = false;
+    bool close = false; //For exit insert function
     bool filex = true;
     while (!close)
     {
@@ -108,6 +117,7 @@ void insert(Inmates i)
             getline(cin, name);
             i.setname(name);
 
+            //open file in append mode
             ofstream out(Filename, ios::app);
 
             if (!out)
@@ -135,6 +145,7 @@ void insert(Inmates i)
                 int AvgH = sumH / 7;
                 int AvgM = sumM / 7;
 
+                //Decide Dorm no on basis pf Avrage sleep time
                 if (AvgH == 9 and AvgM >= 0 and AvgM <= 30)
                 {
                     out << "1 : ";
@@ -160,6 +171,7 @@ void insert(Inmates i)
                     out << "6 : ";
                 }
 
+                //write data in file in formate of(dorm : ID : name : 10 days time)
                 out << i.getID() << " : " << i.getname() << " : ";
                 for (int i = 0; i < 7; i++)
                 {
@@ -198,18 +210,22 @@ void insert(Inmates i)
             close = true;
         }
     }
-}
+}   //End of insert() function
 
+//Search of any inmates from his ID
 void search(Inmates i)
 {
     system("cls");
-    time_t now = time(0);
+    //For current day
+    time_t now = time(0);   
     tm *ltm = localtime(&now);
+
     cout << "\n\n\t\t\t**********SEARCH************\n\n";
     string ID;
     cout << "\tEnter Inmate's ID : ";
     cin >> ID;
 
+    //File open in read mode
     ifstream in(Filename);
 
     if (!in)
@@ -221,8 +237,10 @@ void search(Inmates i)
     else
     {
         string line;
+        //Use Hash table for Least time complexity
         unordered_map<string, pair<pair<string, string>, pair<string,string>>> inmates;
 
+        //insert data in hash table name inmates
         while (getline(in, line))
         {
             stringstream ss(line);
@@ -254,6 +272,7 @@ void search(Inmates i)
         }
         in.close();
 
+        //Iterate Full hash map if data not found it should end of hash map
         auto it = inmates.find(ID);
 
         if (it != inmates.end())
@@ -278,11 +297,14 @@ void search(Inmates i)
             Sleep(2000);
         }
     }
-}
+}   //End of search function
 
 
+//To show all inmate details
 void show()
 {
+
+    //File open in read mode
     ifstream in(Filename);
     system("cls");
     if (!in)
@@ -293,9 +315,12 @@ void show()
     }
     else
     {
+        //For take current day
         time_t now = time(0);
         tm *ltm = localtime(&now);
+
         string line;
+        //Use setw to align output
         cout << setw(5) << "<"
              << "Dorm"
              << ">";
@@ -310,6 +335,7 @@ void show()
              << ">";
         cout << endl
              << endl;
+
         while (getline(in, line))
         {
             stringstream ss(line);
@@ -351,14 +377,14 @@ void show()
         getchar();
         getchar();
     }
-}
+}   //End of show function
 
+//Delete any inmate detail
 void delete_inmate()
 {
-    bool loop = true;
-    while (loop)
+    bool close = false;       //Exit from delete_inmate() function
+    while (!close)
     {
-        loop = false;
         system("cls");
         cout << "=============================Delete====================================";
         cout << "\n\n\tEnter input File name : ";
@@ -370,8 +396,11 @@ void delete_inmate()
         string ID;
         cin >> ID;
 
+        //File open in read mode
         ifstream in(Filename);
         bool found = false;
+
+        //Use vector for dynamic memmory allocation
         vector<string> lines;
         string line;
         while (getline(in, line))
@@ -390,6 +419,7 @@ void delete_inmate()
         }
         in.close();
 
+        //File open in write mode
         ofstream out(Filename, ios::out);
 
         for (int i = 0; i < lines.size(); i++)
@@ -412,19 +442,15 @@ void delete_inmate()
             cout << "\n\n\t2.Back to main menu.";
             int choice;
             cin >> choice;
-            switch (choice)
-            {
-            case 1:
-                loop = true;
-                break;
-            case 2:
-                loop = false;
-                break;
+            if(choice==2){
+                close=true;
             }
         }
     }
-}
+}   //End of delete_inmate() function
 
+
+//Set auto dorm to all inmate on basis of day
 void set_dorm()
 {
     system("cls");
@@ -433,8 +459,12 @@ void set_dorm()
     cout << "\n\n\tEnter Day(small letter) : ";
     string day;
     cin >> day;
+
+    //File open in read mode
     ifstream in(Filename);
     string line;
+
+    //Use vector for dynamic memory allocation
     vector<string> lines;
     int ind;
     string Allday[] = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
@@ -446,6 +476,7 @@ void set_dorm()
             break;
         }
     }
+    //Reset Dorm
     while (getline(in, line))
     {
         stringstream ss(line);
@@ -498,6 +529,7 @@ void set_dorm()
     }
     in.close();
 
+    //File open in close mode
     ofstream out(Filename, ios::out);
 
     for (int i = 0; i < lines.size(); i++)
@@ -509,6 +541,8 @@ void set_dorm()
     Sleep(3000);
 }
 
+
+//Main Inducer function
 void inducer()
 {
 
@@ -518,22 +552,24 @@ void inducer()
     Sleep(2000);
     system("cls");
 
+    //_kbhit() detects that user press any key or not
     while (!(_kbhit()))
     {
+        //For output current time
         time_t now = time(0);
         tm *ltm = localtime(&now);
 
         int hour = ltm->tm_hour;
         int minute = ltm->tm_min;
         int second = ltm->tm_sec;
-        int dormNo;
+
+        //Start inducing on their sleep time
         if (hour == 21 and minute >= 0 and minute <= 30)
         {
             system("cls");
             cout << GREEN << "\tStarting inducer in dorm 1" << RESET << endl
                  << endl;
             cout << "Earpod ID of dorm 1 members" << endl;
-            dormNo = 1;
             ifstream in(Filename);
             if (!in)
             {
@@ -544,6 +580,8 @@ void inducer()
             else
             {
                 string line;
+
+                //Give earpode id of all dorm 1 inmates
                 while (getline(in, line))
                 {
                     stringstream ss(line);
@@ -558,6 +596,7 @@ void inducer()
                     getline(in, line);
                 }
                 cout << endl;
+                //play music
                 cout << "playig music \n";
                 PlaySound(TEXT("1.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
@@ -580,6 +619,7 @@ void inducer()
             else
             {
                 string line;
+                //Give earpode ID of all dorm 2 inmates
                 while (getline(in, line))
                 {
                     stringstream ss(line);
@@ -594,6 +634,7 @@ void inducer()
                     getline(in, line);
                 }
                 cout << endl;
+                //play music
                 cout << "playig music \n";
                 PlaySound(TEXT("2.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
@@ -616,6 +657,7 @@ void inducer()
             else
             {
                 string line;
+                //Give Earpode ID of all dorm 3 inmates
                 while (getline(in, line))
                 {
                     stringstream ss(line);
@@ -630,6 +672,7 @@ void inducer()
                     getline(in, line);
                 }
                 cout << endl;
+                //play music
                 cout << "playig music \n";
                 PlaySound(TEXT("3.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
@@ -652,6 +695,7 @@ void inducer()
             else
             {
                 string line;
+                //Give Earpode ID of all dorm 4 inmates
                 while (getline(in, line))
                 {
                     stringstream ss(line);
@@ -666,6 +710,7 @@ void inducer()
                     getline(in, line);
                 }
                 cout << endl;
+                //play music
                 cout << "playig music \n";
                 PlaySound(TEXT("4.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
@@ -688,6 +733,7 @@ void inducer()
             else
             {
                 string line;
+                //Give Earpod IDof all dorm 5 inmates
                 while (getline(in, line))
                 {
                     stringstream ss(line);
@@ -702,6 +748,7 @@ void inducer()
                     getline(in, line);
                 }
                 cout << endl;
+                //play music
                 cout << "playig music \n";
                 PlaySound(TEXT("5.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
@@ -709,7 +756,6 @@ void inducer()
         }
         else if (hour == 23 and minute > 30 and minute <= 59)
         {
-            dormNo = 6;
             system("cls");
             cout << GREEN << "\tStarting inducer in dorm 1" << RESET << endl
                  << endl;
@@ -724,6 +770,7 @@ void inducer()
             else
             {
                 string line;
+                //Give Earpode ID of all dorm 6 inmates
                 while (getline(in, line))
                 {
                     int ff = line.find("6");
@@ -738,20 +785,25 @@ void inducer()
                     getline(in, line);
                 }
                 cout << endl;
+                //play music
                 cout << "playig music \n";
                 PlaySound(TEXT("6.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
             }
         }
 
+        //Prin current time and "/r" set cursor to first position
         cout << "Current time: " << hour << ":" << minute << ":" << second << "\r" << flush;
         Sleep(1000);
     }
-}
+}   //End of inducer() function
 
+
+//main() function
 int main()
 {
     Inmates i;
+    //For exit from inducer code()
     bool exit = false;
     while (!exit)
     {
