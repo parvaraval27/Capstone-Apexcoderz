@@ -1,8 +1,14 @@
-#include <bits/stdc++.h>
-#include <conio.h>
-#include <ctime>
-#include <windows.h>
-#include <mmsystem.h>
+#include <iostream>       // Standard Input/Output Stream Library
+#include <fstream>        // File Input/Output Stream Library
+#include <sstream>        // String Stream Library
+#include <string>         // String Library
+#include <vector>         // Vector Library
+#include <unordered_map>  // Unordered Map Library
+#include <ctime>          // Time Library
+#include <conio.h>        // _lbhit() function
+#include <windows.h>      // Sleep() function
+#include <mmsystem.h>     // Multimedia System Library(Song)
+#include <iomanip>        // Alignment of output
 
 using namespace std;
 
@@ -51,6 +57,23 @@ public:
         return dorm;
     }
 };
+
+bool ifexist(string ID)
+{
+    ifstream in(Filename);
+
+    string line;
+    while (getline(in, line))
+    {
+        int ff = line.find(ID);
+        if (ff != string ::npos)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 void insert(Inmates i)
 {
@@ -241,12 +264,12 @@ void search(Inmates i)
             Sleep(3000);
             system("cls");
             cout << "\n\n\tDorm : " << (((it->second).first).second);
-            cout << "\n\tID : " << it->first;
-            cout << "\n\tName : " << ((it->second).first).first;
-            cout << "\n\tSleep_time - " << ((it->second).second).first << ":" << ((it->second).second).second;
+            cout << "\n\n\tID : " << it->first;
+            cout << "\n\n\tName : " << ((it->second).first).first;
+            cout << "\n\n\tSleep_time - " << ((it->second).second).first << ":" << ((it->second).second).second;
+            cout << "\n\n\n\tPress Enter to continue.....";
             getchar();
             getchar();
-            cout << "\n\n\tPress Enter to continue.....";
         }
         else
         {
@@ -536,7 +559,7 @@ void inducer()
                 }
                 cout << endl;
                 cout << "playig music \n";
-                PlaySound(TEXT("abc.wav"), NULL, SND_FILENAME | SND_SYNC);
+                PlaySound(TEXT("1.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
             }
         }
@@ -572,7 +595,7 @@ void inducer()
                 }
                 cout << endl;
                 cout << "playig music \n";
-                PlaySound(TEXT("abc.wav"), NULL, SND_FILENAME | SND_SYNC);
+                PlaySound(TEXT("2.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
             }
         }
@@ -608,7 +631,7 @@ void inducer()
                 }
                 cout << endl;
                 cout << "playig music \n";
-                PlaySound(TEXT("abc.wav"), NULL, SND_FILENAME | SND_SYNC);
+                PlaySound(TEXT("3.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
             }
         }
@@ -644,7 +667,7 @@ void inducer()
                 }
                 cout << endl;
                 cout << "playig music \n";
-                PlaySound(TEXT("abc.wav"), NULL, SND_FILENAME | SND_SYNC);
+                PlaySound(TEXT("4.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
             }
         }
@@ -680,7 +703,7 @@ void inducer()
                 }
                 cout << endl;
                 cout << "playig music \n";
-                PlaySound(TEXT("abc.wav"), NULL, SND_FILENAME | SND_SYNC);
+                PlaySound(TEXT("5.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
             }
         }
@@ -716,7 +739,7 @@ void inducer()
                 }
                 cout << endl;
                 cout << "playig music \n";
-                PlaySound(TEXT("abc.wav"), NULL, SND_FILENAME | SND_SYNC);
+                PlaySound(TEXT("6.wav"), NULL, SND_FILENAME | SND_SYNC);
                 cout << "over";
             }
         }
